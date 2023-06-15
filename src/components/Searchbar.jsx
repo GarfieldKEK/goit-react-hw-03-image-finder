@@ -27,7 +27,7 @@ class Searchbar extends Component {
           </button>
 
           <input
-            className={style.SearchForm-input}
+            className={style.SearchForminput}
             type="text"
             autoComplete="off"
             autoFocus
