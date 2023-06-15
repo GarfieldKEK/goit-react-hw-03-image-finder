@@ -86,11 +86,11 @@ img {
   outline: none;
 }
 
-.SearchForm-button:hover {
+.SearchFormbutton:hover {
   opacity: 1;
 }
 
-.SearchForm-button-label {
+.SearchFormbuttonlabel {
   position: absolute;
   width: 1px;
   height: 1px;
