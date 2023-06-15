@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import style from "./styles.modal.css"
 const ImageGallery = ({ children }) => {
-  return <ul className="gallery">{children}</ul>;
+  return <ul className={style.ImageGallery}>{children}</ul>;
 };
 
 ImageGallery.propTypes = {

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import style from "./styles.modal.css"
 const ImageGalleryItem = ({ image, onClick }) => {
   const { webformatURL } = image;
 
   return (
-    <li className="gallery-item" onClick={() => onClick(image)}>
-      <img src={webformatURL} alt="" />
+    <li className={style.ImageGalleryItem} onClick={() => onClick(image)}>
+      <img src={webformatURL} alt="" className={style.ImageGalleryItem-image} />
     </li>
   );
 };

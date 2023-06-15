@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import ImageGalleryItem from './ImageGalleryItem';
 import Loader from './Loader';
 import Button from './Button';
 import Modal from './Modal';
+import style from "./styles.modal.css"
 
 const API_KEY = "36289056-d3890f079fda9298d504367c5";
 
@@ -19,9 +19,7 @@ export class App extends Component {
     page: 1,
   };
 
-  componentDidMount() {
-    this.fetchImages();
-  }
+  
 
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -37,7 +35,7 @@ export class App extends Component {
 
     if (searchQuery === '') return;
 
-    this.setIsLoading(true);
+    this.setState(true);
 
     try {
       const response = await axios.get(
@@ -56,7 +54,7 @@ export class App extends Component {
     } catch (error) {
       console.error('Error fetching images:', error);
     } finally {
-      this.setIsLoading(false);
+      this.setState(false);
     }
   };
 
@@ -76,15 +74,14 @@ export class App extends Component {
     this.setState({ selectedImage: null });
   };
 
-  setIsLoading = (isLoading) => {
-    this.setState({ isLoading });
-  };
+
 
   render() {
     const { images, isLoading, selectedImage } = this.state;
 
     return (
-      <div>
+      <div className={style.App}>
+        
         <Searchbar onSubmit={this.handleSearch} />
 
         {images.length > 0 && (
@@ -113,14 +110,5 @@ export class App extends Component {
   }
 }
 
-App.propTypes = {
-  images: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      webformatURL: PropTypes.string.isRequired,
-      largeImageURL: PropTypes.string.isRequired,
-    })
-  ),
-};
 
 export default App;

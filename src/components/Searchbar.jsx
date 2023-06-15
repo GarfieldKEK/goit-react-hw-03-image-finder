@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import style from "./styles.modal.css"
 class Searchbar extends Component {
   state = {
     query: '',
@@ -20,14 +20,14 @@ class Searchbar extends Component {
     const { query } = this.state;
 
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.handleSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
+      <header className={style.Searchbar}>
+        <form className={style.SearchForm} onSubmit={this.handleSubmit}>
+          <button type="submit" className={style.SearchForm-button}>
+            <span className={style.SearchForm-button-label}>Search</span>
           </button>
 
           <input
-            className="input"
+            className={style.SearchForm-input}
             type="text"
             autoComplete="off"
             autoFocus
