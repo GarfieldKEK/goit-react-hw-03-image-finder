@@ -35,7 +35,7 @@ export class App extends Component {
 
     if (searchQuery === '') return;
 
-    this.setState(true);
+    this.setState(isLoading)= true
 
     try {
       const response = await axios.get(
@@ -54,7 +54,7 @@ export class App extends Component {
     } catch (error) {
       console.error('Error fetching images:', error);
     } finally {
-      this.setState(false);
+      this.setState(isLoading)= false;
     }
   };
 
