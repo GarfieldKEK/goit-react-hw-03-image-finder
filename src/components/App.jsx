@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
@@ -6,36 +6,25 @@ import ImageGalleryItem from './ImageGalleryItem';
 import Loader from './Loader';
 import Button from './Button';
 import Modal from './Modal';
-import style from "./styles.modal.css"
-
+import style from "./styles.modale.css"
+import React, { useState, useEffect } from 'react';
 const API_KEY = "36289056-d3890f079fda9298d504367c5";
 
-export class App extends Component {
-  state = {
-    searchQuery: '',
-    images: [],
-    isLoading: false,
-    selectedImage: null,
-    page: 1,
-  };
+export const App = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [page, setPage] = useState(1);
 
-  
+  useEffect(() => {
+    fetchImages();
+  }, [searchQuery, page]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.searchQuery !== this.state.searchQuery ||
-      prevState.page !== this.state.page
-    ) {
-      this.fetchImages();
-    }
-  }
-
-  fetchImages = async () => {
-    const { searchQuery, page } = this.state;
-
+  const fetchImages = async () => {
     if (searchQuery === '') return;
 
-    this.setState({isLoading: true})
+    setIsLoading(true);
 
     try {
       const response = await axios.get(
@@ -48,67 +37,58 @@ export class App extends Component {
         largeImageURL: image.largeImageURL,
       }));
 
-      this.setState((prevState) => ({
-        images: [...prevState.images, ...newImages],
-      }));
+      setImages((prevImages) => [...prevImages, ...newImages]);
     } catch (error) {
       console.error('Error fetching images:', error);
     } finally {
-      this.setState({isLoading: false});
+      setIsLoading(false);
     }
   };
 
-  handleSearch = (query) => {
-    this.setState({ searchQuery: query, images: [], page: 1 });
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setImages([]);
+    setPage(1);
   };
 
-  loadMoreImages = () => {
-    this.setState((prevState) => ({ page: prevState.page + 1 }));
+  const loadMoreImages = () => {
+    setPage((prevPage) => prevPage + 1);
   };
 
-  openModal = (image) => {
-    this.setState({ selectedImage: image });
+  const openModal = (image) => {
+    setSelectedImage(image);
   };
 
-  closeModal = () => {
-    this.setState({ selectedImage: null });
+  const closeModal = () => {
+    setSelectedImage(null);
   };
 
+  return (
+    <div className={style.App}>
+      <Searchbar onSubmit={handleSearch} />
 
+      {images.length > 0 && (
+        <ImageGallery>
+          {images.map((image) => (
+            <ImageGalleryItem
+              key={image.id}
+              image={image}
+              onClick={openModal}
+            />
+          ))}
+        </ImageGallery>
+      )}
 
-  render() {
-    const { images, isLoading, selectedImage } = this.state;
+      {isLoading && <Loader />}
 
-    return (
-      <div className={style.App}>
-        
-        <Searchbar onSubmit={this.handleSearch} />
+      {images.length > 0 && !isLoading && (
+        <Button onClick={loadMoreImages}>Load More</Button>
+      )}
 
-        {images.length > 0 && (
-          <ImageGallery>
-            {images.map((image) => (
-              <ImageGalleryItem
-                key={image.id}
-                image={image}
-                onClick={this.openModal}
-              />
-            ))}
-          </ImageGallery>
-        )}
+      {selectedImage && (
+        <Modal image={selectedImage} onClose={closeModal} />
+      )}
+    </div>
+  );
+};
 
-        {isLoading && <Loader />}
-
-        {images.length > 0 && !isLoading && (
-          <Button onClick={this.loadMoreImages}>Load More</Button>
-        )}
-
-        {selectedImage && (
-          <Modal image={selectedImage} onClose={this.closeModal} />
-        )}
-      </div>
-    );
-  }
-}
-
-
-export default App;
