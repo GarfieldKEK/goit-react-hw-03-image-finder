@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from "./styles.modal.css"
+import style from "./styles.module.css"
 const ImageGalleryItem = ({ image, onClick }) => {
   const { webformatURL } = image;
 
