@@ -1,34 +1,32 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import style from "./styles.module.css"
-class Modal extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
+import style from './styles.module.css';
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
+const Modal = ({ image, onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
 
-  handleKeyDown = (event) => {
-    if (event.key === 'Escape') {
-      this.props.onClose();
-    }
-  };
+    document.addEventListener('keydown', handleKeyDown);
 
-  render() {
-    const { image, onClose } = this.props;
-    const { largeImageURL } = image;
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
-    return (
-      <div className={style.Overlay} onClick={onClose}>
-        <div className={style.Modal}>
-          <img src={largeImageURL} alt="" />
-        </div>
+  const { largeImageURL } = image;
+
+  return (
+    <div className={style.Overlay} onClick={onClose}>
+      <div className={style.Modal}>
+        <img src={largeImageURL} alt="" />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 Modal.propTypes = {
   image: PropTypes.shape({
