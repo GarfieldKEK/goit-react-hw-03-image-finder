@@ -18,32 +18,32 @@ const App = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    const fetchImages = async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await axios.get(
+          `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+        );
+
+        const newImages = response.data.hits.map((image) => ({
+          id: image.id,
+          webformatURL: image.webformatURL,
+          largeImageURL: image.largeImageURL,
+        }));
+
+        setImages((prevImages) => [...prevImages, ...newImages]);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (searchQuery === '') return;
 
     fetchImages();
   }, [searchQuery, page]);
-
-  const fetchImages = async () => {
-    setIsLoading(true);
-
-    try {
-      const response = await axios.get(
-        `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-      );
-
-      const newImages = response.data.hits.map((image) => ({
-        id: image.id,
-        webformatURL: image.webformatURL,
-        largeImageURL: image.largeImageURL,
-      }));
-
-      setImages((prevImages) => [...prevImages, ...newImages]);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
